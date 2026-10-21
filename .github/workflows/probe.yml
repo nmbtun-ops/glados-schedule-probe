@@ -1,0 +1,27 @@
+name: Schedule probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/probe.yml'
+  schedule:
+    # Temporary: Oct 21, 13:35 through 13:55 Beijing, every five minutes.
+    # Cron has no year field; disable this workflow after diagnosis.
+    - cron: '35,40,45,50,55 5 21 10 *'
+
+permissions: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Show trigger and clock
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          echo "event=$EVENT_NAME schedule=$SCHEDULE"
+          date -u
+          TZ=Asia/Shanghai date
